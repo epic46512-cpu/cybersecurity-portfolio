@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  CYBERSECURITY PORTFOLIO — Abdullah Bashir
+  ============================================================================
+  Welcome! This file is the STRUCTURE of the page.
+
+  What each file does (a very simple rule to remember):
+    index.html  -> WHAT is on the page      (the content you read)
+    style.css   -> HOW it looks             (colours, spacing, layout)
+    script.js   -> HOW it moves/behaves     (menus, animations, effects)
+
+  The three files stay in the same folder and link to each other, so the
+  website works offline and can be published on GitHub Pages with no
+  build step and no installing anything.
+
+  HOW TO EDIT: search (Ctrl + F) for the words NEXT TO what you want to
+  change, for example "SEND ME A MESSAGE" or "Your GitHub username".
+  Every place you may want to change is marked with an "EDIT:" comment.
+  ============================================================================
+-->
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- charset: lets the browser read special characters correctly -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- viewport: makes the page fit properly on phones and tablets -->
+
+    <!-- EDIT: change these two lines if you want a different page title. -->
+    <title>Abdullah Bashir | Aspiring Cybersecurity Analyst</title>
+    <meta name="description"
+          content="Portfolio of Abdullah Bashir — an aspiring cybersecurity analyst learning networking, Linux, Python and ethical hacking fundamentals.">
+
+    <!--
+      FONTS: three fonts are loaded from Google Fonts.
+        Space Grotesk  -> headings and my name (modern, techy)
+        Inter          -> normal reading text
+        JetBrains Mono -> code-like text such as 127.0.0.1
+      If you are offline the browser simply falls back to a normal font,
+      so the page still looks fine.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+          rel="stylesheet">
+
+    <!-- The FAVICON is the little icon shown in the browser tab.
+         It is written as a tiny SVG picture of a shield. -->
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%9B%A1%EF%B8%8F</text></svg>">
+
+    <link rel="stylesheet" href="style.css">
+    <!-- This single line connects index.html to style.css. -->
+</head>
+
+<body>
+
+    <!--
+      ====================================================================
+      BACKGROUND DECORATION
+      ====================================================================
+      These three <div> elements are empty — they have no text. They sit
+      behind everything and only make the background look better:
+        .bg-grid   -> faint grid lines, like graph paper
+        .bg-glow-1 -> a soft blue light in the top left
+        .bg-glow-2 -> a soft cyan light in the bottom right
+      Because they never change and cannot be clicked, they get
+      aria-hidden="true". That tells screen readers to ignore them.
+      ====================================================================
+    -->
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+
+    <!-- SKIP LINK: helps people who use a keyboard.
+         It stays invisible until you press the Tab key. -->
+    <a href="#home" class="skip-link">Skip to main content</a>
+
+
+    <!-- Small bar at the very top that fills up as you scroll down.
+         The width is changed by script.js. -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+
+    <!-- ====================================================================
+         NAVIGATION BAR (the menu at the top)
+         ====================================================================
+         "position: fixed" in the CSS keeps this stuck to the top of the
+         screen when you scroll. script.js adds the class "scrolled" so it
+         can gain a shadow and a slightly darker background.
+         ==================================================================== -->
+    <header class="nav" id="nav">
+        <div class="container nav-inner">
+
+            <!-- Logo = the little shield icon + my name.
+                 Clicking it scrolls back to the top. -->
+            <a href="#home" class="brand">
+                <span class="brand-shield" aria-hidden="true"></span>
+                <span class="brand-name">Abdullah&nbsp;Bashir</span>
+            </a>
+
+            <!-- Menu links. These jump to sections further down the page.
+                 The # symbol means "go to the element with this id". -->
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about"   class="nav-link">About</a></li>
+                <li><a href="#skills"  class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#certs"   class="nav-link">Certifications</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+
+            <!-- EDIT: this button scrolls down to the contact section. -->
+            <a href="#contact" class="btn btn-primary btn-nav">Get in touch</a>
+
+            <!--
+              HAMBURGER BUTTON: only visible on small screens.
+              It has three empty <span> bars that CSS draws as three lines.
+              script.js turns them into an "X" when the menu is open.
+            -->
+            <button class="nav-toggle" id="navToggle"
+                    aria-label="Open menu"
+                    aria-expanded="false"
+                    aria-controls="navLinks">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </div>
+    </header>
+
+
+    <main>
+        <!-- ==================================================================
+             1. HERO — the first thing a visitor sees
+             ==================================================================
+             Left side: my name, my role and a short introduction.
+             Right side: a decorative glowing padlock built only from CSS.
+             ================================================================== -->
+        <section id="home" class="hero">
+            <div class="container hero-inner">
+
+                <div class="hero-text">
+
+                    <!-- Small label above the name. -->
+                    <p class="eyebrow reveal">
+                        <span class="eyebrow-dot"></span>
+                        Portfolio
+                    </p>
+
+                    <!-- My name in big letters. -->
+                    <h1 class="hero-name reveal">Abdullah Bashir</h1>
+
+                    <!--
+                      MY ROLE. script.js types the sentences out one letter at a
+                      time, then repeats them forever.
+
+                      EDIT: to change what is typed, edit the data-roles
+                      attribute below. Separate each sentence with a comma.
+                      The first sentence is ALSO written as normal text inside
+                      the <span>, so if JavaScript is switched off the page still
+                      shows "Aspiring Cybersecurity Analyst" instead of nothing.
+                    -->
+                    <p class="hero-role">
+                        <span id="typedRole" data-roles="Aspiring Cybersecurity Analyst,Cybersecurity Student,Learning Ethical Hacking">Aspiring Cybersecurity Analyst</span><span class="cursor" aria-hidden="true"></span>
+                    </p>
+
+                    <p class="hero-desc reveal">
+                        I am learning how computer networks behave and how to protect
+                        them. I practise only on my own computer and my own lab —
+                        never on a network that belongs to someone else.
+                    </p>
+
+                    <!-- Two buttons -->
+                    <div class="hero-buttons reveal">
+                        <a href="#projects" class="btn btn-primary">View my projects</a>
+                        <a href="#about" class="btn btn-outline">About me</a>
+                    </div>
+
+                </div>
+
+                <!-- Decorative CSS artwork on the right.
+                     aria-hidden="true" because it carries no information. -->
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="padlock">
+                        <div class="padlock-shackle"></div>
+                        <div class="padlock-body">
+                            <span class="padlock-keyhole"></span>
+                        </div>
+                    </div>
+                    <span class="orbit-dot dot-1"></span>
+                    <span class="orbit-dot dot-2"></span>
+                    <span class="orbit-dot dot-3"></span>
+                </div>
+
+            </div>
+
+            <!-- Fades out towards the bottom of the hero section. -->
+            <div class="hero-fade" aria-hidden="true"></div>
+        </section>
+
+
+        <!-- ==================================================================
+             2. ABOUT ME
+             ==================================================================
+             Two columns on a wide screen: text on the left, four small
+             "fact" cards on the right. On a phone they stack in one column.
+             ================================================================== -->
+        <section id="about" class="section">
+            <div class="container">
+
+                <p class="eyebrow reveal">
+                    <span class="eyebrow-dot"></span>
+                    About me
+                </p>
+
+                <h2 class="section-title reveal">
+                    Learning by building,<br>not just reading.
+                </h2>
+
+                <div class="about-grid">
+
+                    <!-- Left column: the actual text -->
+                    <div class="about-text reveal">
+                        <p>
+                            Hello, I am <strong>Abdullah Bashir</strong>, an aspiring
+                            cybersecurity analyst. I am still a student, and I am honest
+                            about that — everything on this page is something I am
+                            actively learning or something I have built myself in my
+                            own lab.
+                        </p>
+                        <p>
+                            My way of learning is simple: I study one idea, then I write
+                            a small program to test it. That is how I got into Python,
+                            networking and Linux. Right now I am working on four areas:
+                            <strong>cybersecurity</strong>, <strong>networking</strong>,
+                            <strong>Linux</strong> and <strong>Python</strong>.
+                        </p>
+                        <p>
+                            All of my practice happens on <code>127.0.0.1</code> — my own
+                            computer. I only ever test systems I own or have explicit
+                            written permission to test.
+                        </p>
+                    </div>
+
+                    <!-- Right column: four small summary cards -->
+                    <div class="about-cards">
+                        <div class="mini-card reveal">
+                            <span class="mini-label">Currently learning</span>
+                            <span class="mini-value">Networking &amp; Linux</span>
+                        </div>
+                        <div class="mini-card reveal">
+                            <span class="mini-label">Main language</span>
+                            <span class="mini-value">Python</span>
+                        </div>
+                        <div class="mini-card reveal">
+                            <span class="mini-label">Practice lab</span>
+                            <span class="mini-value">My own machine only</span>
+                        </div>
+                        <div class="mini-card reveal">
+                            <span class="mini-label">Level</span>
+                            <span class="mini-value">Beginner, learning daily</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================================================================
+             3. SKILLS
+             ==================================================================
+             Each skill has a small LEVEL LABEL so nothing is overstated:
+               "Learning"     = actively studying it right now
+               "Beginner"     = understands the basics, still practising
+               "Foundations"  = has covered the introductory material
+             EDIT: to change a label, just replace the word inside the
+             <span class="tag"> ... </span>.
+             ================================================================== -->
+        <section id="skills" class="section">
+            <div class="container">
+
+                <p class="eyebrow reveal">
+                    <span class="eyebrow-dot"></span>
+                    Skills
+                </p>
+
+                <h2 class="section-title reveal">What I am learning</h2>
+                <p class="section-sub reveal">
+                    These are my current study areas. I have labelled each one
+                    honestly so you can see where I really am.
+                </p>
+
+                <div class="skills-grid">
+
+                    <!-- ---------- Skill card 1 ---------- -->
+                    <article class="skill-card reveal">
+                        <div class="skill-head">
+                            <h3>Networking</h3>
+                            <span class="tag tag-learning">Learning</span>
+                        </div>
+                        <p>
+                            How data travels between computers using IP addresses,
+                            ports and the TCP and UDP protocols.
+                        </p>
+                        <p class="skill-note">Currently studying: subnetting and DNS.</p>
+                    </article>
+
+                    <!-- ---------- Skill card 2 ---------- -->
+                    <article class="skill-card reveal">
+                        <div class="skill-head">
+                            <h3>Linux</h3>
+                            <span class="tag tag-learning">Learning</span>
+                        </div>
+                        <p>
+                            Navigating the file system, using the command line, and
+                            understanding permissions and services.
+                        </p>
+                        <p class="skill-note">Currently studying: CLI and file permissions.</p>
+                    </article>
+
+                    <!-- ---------- Skill card 3 ---------- -->
+                    <article class="skill-card reveal">
+                        <div class="skill-head">
+                            <h3>Python</h3>
+                            <span class="tag tag-beginner">Beginner</span>
+                        </div>
+                        <p>
+                            My main language for writing scripts — variables, functions,
+                            loops, file handling and the socket library.
+                        </p>
+                        <p class="skill-note">Currently studying: sockets and error handling.</p>
+                    </article>
+
+                    <!-- ---------- Skill card 4 ---------- -->
+                    <article class="skill-card reveal">
+                        <div class="skill-head">
+                            <h3>Ethical Hacking Fundamentals</h3>
+                            <span class="tag tag-beginner">Beginner</span>
+                        </div>
+                        <p>
+                            Understanding vulnerabilities, how an attack works in theory,
+                            and how defenders detect and fix it.
+                        </p>
+                        <p class="skill-note">Currently studying: OWASP Top 10 basics.</p>
+                    </article>
+
+                    <!-- ---------- Skill card 5 ---------- -->
+                    <article class="skill-card reveal">
+                        <div class="skill-head">
+                            <h3>Git &amp; GitHub</h3>
+                            <span class="tag tag-foundations">Foundations</span>
+                        </div>
+                        <p>
+                            Making commits, branching and pushing projects to GitHub
+                            so my work is version-controlled and shareable.
+                        </p>
+                        <p class="skill-note">Currently studying: branches and pull requests.</p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================================================================
+             4. PROJECTS
+             ==================================================================
+             IMPORTANT: every card here is marked "In Progress" because these
+             projects are still being built and improved.
+             EDIT: if you finish a project, change the word "In Progress" to
+             "Completed" in that card only.
+             Nothing here is claimed as finished work or as a real deployment.
+             ================================================================== -->
+        <section id="projects" class="section">
+            <div class="container">
+
+                <p class="eyebrow reveal">
+                    <span class="eyebrow-dot"></span>
+                    Projects
+                </p>
+
+                <h2 class="section-title reveal">Things I am building</h2>
+                <p class="section-sub reveal">
+                    Small programs I write in Python to understand how networks
+                    actually behave. All of them run on my own computer only.
+                </p>
+
+                <div class="projects-grid">
+
+                    <!-- ---------- Project card 1 ---------- -->
+                    <article class="project-card reveal">
+                        <div class="project-top">
+                            <span class="project-icon" aria-hidden="true">&gt;_</span>
+                            <span class="tag tag-progress">In Progress</span>
+                        </div>
+
+                        <h3>Python Network Scanner</h3>
+                        <p>
+                            A Python script that checks which ports are open on my own
+                            computer. I use the socket library to try to connect to each
+                            port one by one, and it tells me which ones answered.
+                        </p>
+
+                        <ul class="tag-list">
+                            <li>Python</li>
+                            <li>Sockets</li>
+                            <li>Port scanning</li>
+                        </ul>
+
+                        <p class="project-legal">
+                            Runs against <code>127.0.0.1</code> only.
+                        </p>
+
+                        <!-- EDIT: put your real repository link inside href="".
+                             While it is empty the link is disabled. -->
+                        <div class="project-links">
+                            <a href="" class="btn btn-small btn-outline" aria-disabled="true">View code</a>
+                        </div>
+                    </article>
+
+                    <!-- ---------- Project card 2 ---------- -->
+                    <article class="project-card reveal">
+                        <div class="project-top">
+                            <span class="project-icon" aria-hidden="true">[i]</span>
+                            <span class="tag tag-progress">In Progress</span>
+                        </div>
+
+                        <h3>Network Information Tool</h3>
+                        <p>
+                            A small utility that collects information about my own
+                            machine's network — its IP address, its hostname and which
+                            network interfaces are currently active.
+                        </p>
+
+                        <ul class="tag-list">
+                            <li>Python</li>
+                            <li>OS modules</li>
+                            <li>IP addressing</li>
+                        </ul>
+
+                        <p class="project-legal">
+                            Collects information about my own computer only.
+                        </p>
+
+                        <div class="project-links">
+                            <a href="" class="btn btn-small btn-outline" aria-disabled="true">View code</a>
+                        </div>
+                    </article>
+
+                    <!-- ---------- Project card 3 ---------- -->
+                    <article class="project-card reveal">
+                        <div class="project-top">
+                            <span class="project-icon" aria-hidden="true">&#9635;</span>
+                            <span class="tag tag-progress">In Progress</span>
+                        </div>
+
+                        <h3>Cybersecurity Lab Practice</h3>
+                        <p>
+                            A self-built practice lab where I keep recreating small
+                            security problems — weak passwords, open services and
+                            misconfigured settings — and then learning how to fix them.
+                        </p>
+
+                        <ul class="tag-list">
+                            <li>Linux</li>
+                            <li>Hardening</li>
+                            <li>Documentation</li>
+                        </ul>
+
+                        <p class="project-legal">
+                            Isolated lab on my own machine. Nothing external is tested.
+                        </p>
+
+                        <div class="project-links">
+                            <a href="" class="btn btn-small btn-outline" aria-disabled="true">View code</a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================================================================
+             5. CERTIFICATIONS
+             ==================================================================
+             HONESTY NOTE: there are no certificates listed here yet, because
+             I do not want to show anything that is not real. This section is
+             an empty template waiting for genuine certificates.
+
+             HOW TO ADD A REAL CERTIFICATE:
+               1. Copy the commented-out example card at the bottom of this
+                  section.
+               2. Paste it after the note card.
+               3. Change the title to the real certificate name, put the year
+                  in the small text, and add your link inside href="".
+               4. Delete the note card ("Certificates will appear here") once
+                  you have at least one real certificate.
+             ================================================================== -->
+        <section id="certs" class="section">
+            <div class="container">
+
+                <p class="eyebrow reveal">
+                    <span class="eyebrow-dot"></span>
+                    Certifications
+                </p>
+
+                <h2 class="section-title reveal">Certificates</h2>
+                <p class="section-sub reveal">
+                    I list only certificates I have genuinely earned. This space is
+                    reserved for them and is currently empty.
+                </p>
+
+                <div class="certs-grid">
+
+                    <!-- Empty-state card. Remove it when you add a real one. -->
+                    <div class="cert-empty reveal">
+                        <span class="cert-empty-icon" aria-hidden="true">&#128273;</span>
+                        <h3>Certificates will appear here</h3>
+                        <p>
+                            No certificates to show yet. As soon as I complete a
+                            recognised course or exam, I will add the real details
+                            and a link to verify it.
+                        </p>
+                    </div>
+
+                    <!--
+                      EXAMPLE CERTIFICATE CARD — this is commented out so it is
+                      NOT visible. Copy it (everything from <article> to </article>)
+                      and paste it after the note card above.
+                    -->
+                    <!--
+                    <article class="cert-card reveal">
+                        <div class="cert-head">
+                            <h3>Name of the real certificate</h3>
+                            <span class="tag tag-beginner">2026</span>
+                        </div>
+                        <p>Issuing organisation name.</p>
+                        <a href="" class="cert-link" aria-disabled="true">View credential</a>
+                    </article>
+                    -->
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================================================================
+             6. CONTACT
+             ==================================================================
+             EDIT THESE THREE PLACES — search (Ctrl + F) for:
+               "your-email@example.com"   -> your real email address
+               "github.com/your-username" -> your GitHub profile
+               "linkedin.com/in/your-profile" -> your LinkedIn profile
+             Update BOTH the visible text AND the href="..." link.
+             ================================================================== -->
+        <section id="contact" class="section">
+            <div class="container">
+
+                <p class="eyebrow reveal">
+                    <span class="eyebrow-dot"></span>
+                    Contact
+                </p>
+
+                <h2 class="section-title reveal">Send me a message</h2>
+                <p class="section-sub reveal">
+                    If you have a question, a project idea or an opportunity to learn
+                    together, feel free to get in touch.
+                </p>
+
+                <div class="contact-grid">
+
+                    <!-- Email.
+                         The mailto: prefix tells the browser to open your
+                         email app with this address already filled in. -->
+                    <a href="mailto:abdullah465120@gmail.com" class="contact-card reveal">
+                        <span class="contact-icon" aria-hidden="true">&#9993;</span>
+                        <span class="contact-label">Email</span>
+                        <span class="contact-value">abdullah465120@gmail.com</span>
+                    </a>
+
+                    <!-- EDIT: replace both lines below with your real profile. -->
+                    <a href="https://github.com/your-username"
+                       class="contact-card reveal"
+                       target="_blank" rel="noopener noreferrer">
+                        <span class="contact-icon" aria-hidden="true">&#9679;</span>
+                        <span class="contact-label">GitHub</span>
+                        <span class="contact-value">github.com/your-username</span>
+                    </a>
+
+                    <!-- EDIT: replace both lines below with your real profile. -->
+                    <a href="https://linkedin.com/in/your-profile"
+                       class="contact-card reveal"
+                       target="_blank" rel="noopener noreferrer">
+                        <span class="contact-icon" aria-hidden="true">&#9733;</span>
+                        <span class="contact-label">LinkedIn</span>
+                        <span class="contact-value">linkedin.com/in/your-profile</span>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- ====================================================================
+         7. FOOTER
+         ====================================================================
+         The year is written as a <span> with an id. script.js replaces the
+         number with the CURRENT year automatically, so you never have to
+         edit it by hand.
+         ==================================================================== -->
+    <footer class="footer">
+        <div class="container footer-inner">
+
+            <p class="footer-name">Abdullah Bashir — Aspiring Cybersecurity Analyst</p>
+
+            <p class="footer-legal">
+                All projects shown are personal work-in-progress and are practised
+                only on systems I own.
+            </p>
+
+            <p class="copyright">
+                &copy; <span id="year">2026</span> Abdullah Bashir. All rights reserved.
+            </p>
+
+        </div>
+    </footer>
+
+
+    <!-- Button that scrolls back to the top. script.js shows it only after
+         you have scrolled down a little. -->
+    <button class="to-top" id="toTop" aria-label="Back to top">&uarr;</button>
+
+
+    <!--
+      This one line connects index.html to script.js.
+      It is placed at the very end of the body so that all the HTML above
+      has already loaded by the time JavaScript looks for it.
+    -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>

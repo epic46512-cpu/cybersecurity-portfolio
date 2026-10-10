@@ -1,0 +1,1388 @@
+/* ==========================================================================
+   CYBERSECURITY PORTFOLIO — STYLESHEET
+   ==========================================================================
+   CSS is what makes the page look beautiful. It controls colour, spacing,
+   size, shadows and how the page behaves on different screen sizes.
+
+   HOW THIS FILE IS ORGANISED (use Ctrl + F to jump to a number):
+     1. VARIABLES      — all the colours stored in one place
+     2. RESET & BASE   — default settings for the whole page
+     3. BACKGROUND     — the grid and the soft glows
+     4. BUTTONS        — the reusable styled buttons
+     5. NAVBAR         — the menu at the top
+     6. HERO           — the first section
+     7. ABOUT          — section 2
+     8. SKILLS         — section 3
+     9. PROJECTS       — section 4
+     10. CERTS         — section 5
+     11. CONTACT       — section 6
+     12. FOOTER        — section 7
+     13. RESPONSIVE    — rules for phones and tablets (put at the end
+                         because they override the rules above)
+
+   TIP: the mobile rules at the bottom win, because CSS always reads from
+   top to bottom and the LAST matching rule is the one that is used.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. VARIABLES — the colours of the whole website
+   ==========================================================================
+   These are stored in :root, which means they can be used ANYWHERE in the
+   file by typing var(--name). If you ever want to change the theme, you
+   only need to edit this one small block and the entire site updates.
+   ========================================================================== */
+:root {
+    /* --- Background colours (dark navy theme) --- */
+    --bg-dark:        #050b18;   /* main background colour */
+    --bg-navy:        #071328;   /* slightly lighter navy for sections */
+    --bg-card:        #0a1a33;   /* card background */
+    --bg-card-hover:  #0d2445;   /* card background when the mouse is over it */
+
+    /* --- Neon accent colours --- */
+    --neon-blue:      #2f7bff;   /* main blue accent */
+    --cyan:           #00e5ff;   /* bright cyan accent */
+    --cyan-dim:       #00b8cc;   /* darker cyan, used for less important parts */
+
+    /* --- A gradient made from blue to cyan.
+         Used for glowing headings and button backgrounds. --- */
+    --gradient:       linear-gradient(135deg, #00e5ff 0%, #2f7bff 100%);
+
+    /* --- Text colours --- */
+    --text-main:      #e8eefc;   /* bright white-blue, used for headings */
+    --text-body:      #b7c5dd;   /* slightly dimmer, used for paragraphs */
+    --text-muted:     #7f91ad;   /* dimmest, used for small notes */
+
+    /* --- Borders and shadows --- */
+    --border:         rgba(0, 229, 255, 0.14);  /* faint cyan edge */
+    --border-strong:  rgba(0, 229, 255, 0.32);  /* brighter cyan edge */
+
+    /* The glow. This is the soft neon light around cards and buttons. */
+    --glow:           0 0 24px rgba(0, 229, 255, 0.22);
+    --glow-strong:    0 0 40px rgba(0, 229, 255, 0.38);
+
+    /* --- Size and spacing --- */
+    --container:      1180px;    /* how wide the content is allowed to get */
+    --radius:         16px;      /* how round the corners of cards are */
+    --radius-sm:      8px;
+
+    /* --- Smoothness of animations --- */
+    --transition:     0.3s ease;
+}
+
+
+/* ==========================================================================
+   2. RESET & BASE — default settings for every element
+   ========================================================================== */
+
+/* The "box model" rule.
+   Without this, adding padding makes a box WIDER than its set width,
+   which pushes things off the edge of the screen. This one line fixes it. */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Smooth scrolling: when you click a menu link, the page glides down
+   instead of jumping instantly. scroll-padding-top leaves room so the
+   fixed navbar does not cover the heading you just scrolled to. */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
+body {
+    /* These three fonts match the ones loaded in index.html. */
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-body);
+    line-height: 1.75;            /* space between lines of text */
+    overflow-x: hidden;           /* hides any sideways scrollbar */
+    -webkit-font-smoothing: antialiased;  /* makes text look smoother */
+}
+
+/* Headings use the "Space Grotesk" font and the bright text colour. */
+h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    color: var(--text-main);
+    line-height: 1.25;            /* headings sit closer together than paragraphs */
+    font-weight: 700;
+}
+
+/* Code-style text such as 127.0.0.1 — monospace means every letter is
+   the same width, which makes code easy to read. */
+code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(0, 229, 255, 0.10);
+    color: var(--cyan);
+    padding: 2px 7px;
+    border-radius: var(--radius-sm);
+    font-size: 0.88em;
+    border: 1px solid var(--border);
+}
+
+/* Turns glowing text into the blue-to-cyan gradient.
+   -webkit-text-fill-color is needed for Safari and Chrome. */
+.glow-text,
+.hero-name,
+.section-title {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* The container: keeps content in the middle of the screen and stops it
+   from becoming too wide on a big monitor. */
+.container {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;               /* 0 on left/right, auto centres it */
+    padding: 0 24px;
+}
+
+/* --- Accessibility helpers --- */
+
+/* Visible only when someone presses the Tab key to skip the menu. */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 16px;
+    z-index: 1000;
+    background: var(--bg-card);
+    color: var(--cyan);
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    transition: top var(--transition);
+}
+.skip-link:focus {
+    top: 16px;
+}
+
+/* A clear outline when using the keyboard, instead of the default one. */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+}
+
+/* Removes the default blue highlight on links. */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* --- Images (none used yet, but good to have) --- */
+img {
+    max-width: 100%;
+    display: block;
+}
+
+
+/* ==========================================================================
+   3. BACKGROUND — the grid and the soft glows
+   ==========================================================================
+   These three elements are EMPTY in the HTML. Everything they look like is
+   drawn here in CSS. They sit behind all the content because they use
+   position: fixed, which pins them to the screen.
+   ========================================================================== */
+
+/* Faint grid lines, like graph paper.
+   Two repeating gradients are stacked to make vertical and horizontal lines. */
+.bg-grid {
+    position: fixed;
+    inset: 0;                     /* top/right/bottom/left all equal to 0,
+                                     which means "fill the whole screen" */
+    z-index: -3;                  /* negative z-index pushes it BEHIND the content */
+    background-image:
+        linear-gradient(rgba(0, 229, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.045) 1px, transparent 1px);
+    background-size: 60px 60px;
+    /* A dark radial gradient fades the grid out towards the edges. */
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+            mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+}
+
+/* The soft coloured lights. A radial-gradient goes from the centre outwards. */
+.bg-glow {
+    position: fixed;
+    z-index: -2;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    filter: blur(130px);          /* a big blur turns a hard circle into soft light */
+    opacity: 0.5;
+    /* The animation slowly drifts the light around for a living feel. */
+    animation: drift 18s ease-in-out infinite alternate;
+}
+
+.bg-glow-1 {
+    top: -250px;
+    left: -200px;
+    background: radial-gradient(circle, rgba(47, 123, 255, 0.55) 0%, transparent 70%);
+}
+
+/* The second light has a different delay so the two never move together. */
+.bg-glow-2 {
+    bottom: -300px;
+    right: -200px;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.40) 0%, transparent 70%);
+    animation-delay: -9s;
+}
+
+@keyframes drift {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(60px, 50px); }
+}
+
+
+/* ==========================================================================
+   4. BUTTONS — reused everywhere
+   ========================================================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border-radius: 50px;          /* a "pill" shape */
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform var(--transition),
+                box-shadow var(--transition),
+                background var(--transition),
+                border-color var(--transition);
+}
+
+/* Every button lifts slightly when the mouse hovers over it. */
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+/* Filled blue-to-cyan button — the main call to action. */
+.btn-primary {
+    background: var(--gradient);
+    color: #041020;
+    box-shadow: var(--glow);
+}
+.btn-primary:hover {
+    box-shadow: var(--glow-strong);
+}
+
+/* Outline button — the quieter secondary action. */
+.btn-outline {
+    background: transparent;
+    color: var(--cyan);
+    border-color: var(--border-strong);
+}
+.btn-outline:hover {
+    background: rgba(0, 229, 255, 0.08);
+    border-color: var(--cyan);
+    box-shadow: var(--glow);
+}
+
+/* A smaller version, used inside the project cards. */
+.btn-small {
+    padding: 9px 18px;
+    font-size: 0.85rem;
+}
+
+/* A button that has no real link yet.
+   aria-disabled="true" in the HTML tells screen readers it is inactive,
+   and pointer-events stops the click from doing anything. */
+.btn-outline[aria-disabled="true"] {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* ==========================================================================
+   5. NAVBAR — the menu that sticks to the top
+   ========================================================================== */
+
+.nav {
+    position: fixed;              /* stays visible while scrolling */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: rgba(5, 11, 24, 0.75);
+    /* backdrop-filter is the "frosted glass" effect. If a browser does not
+     support it, the semi-transparent background still looks fine. */
+    -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+    border-bottom: 1px solid transparent;
+    transition: background var(--transition), border-color var(--transition);
+}
+
+/* script.js adds this class once you scroll down, so the bar becomes solid. */
+.nav.scrolled {
+    background: rgba(5, 11, 24, 0.95);
+    border-bottom-color: var(--border);
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+}
+
+/* --- Logo on the left --- */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text-main);
+    letter-spacing: 0.3px;
+}
+
+/* The shield is drawn with CSS: a rounded box with a clipped bottom edge. */
+.brand-shield {
+    width: 22px;
+    height: 26px;
+    background: var(--gradient);
+    /* clip-path cuts a shape out of the box — here it makes a shield by
+       cutting the bottom into a point. */
+    clip-path: polygon(0 0, 100% 0, 100% 65%, 50% 100%, 0 65%);
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6));
+}
+
+/* --- Links in the middle --- */
+.nav-links {
+    display: flex;
+    list-style: none;             /* removes the default bullet points */
+    gap: 6px;
+}
+
+.nav-link {
+    display: block;
+    padding: 8px 15px;
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color var(--transition), background var(--transition);
+}
+
+.nav-link:hover {
+    color: var(--cyan);
+    background: rgba(0, 229, 255, 0.06);
+}
+
+/* script.js adds this class to the link of the section you are reading.
+   It highlights where you currently are on the page. */
+.nav-link.active {
+    color: var(--cyan);
+    background: rgba(0, 229, 255, 0.10);
+}
+
+/* --- Hamburger button (hidden on big screens) --- */
+.nav-toggle {
+    display: none;                 /* shown again in the RESPONSIVE part */
+    flex-direction: column;        /* stacks the three bars vertically */
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+/* The three bars are EMPTY spans. This gives them size and colour. */
+.nav-toggle span {
+    display: block;
+    width: 19px;
+    height: 2px;
+    background: var(--cyan);
+    border-radius: 2px;
+    margin: 0 auto;
+    /* transition is what makes the "X" animation smooth */
+    transition: transform 0.3s ease, opacity 0.2s ease;
+}
+
+/* When the menu is open, script.js adds .open to the button.
+   Moving bar 1 down and bar 3 up, then turning both, makes an X. */
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* --- The thin progress bar at the very top of the page --- */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0;                      /* script.js changes this to a percentage */
+    background: var(--gradient);
+    z-index: 200;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.8);
+}
+
+
+/* ==========================================================================
+   6. HERO — the first section
+   ========================================================================== */
+
+.hero {
+    position: relative;
+    min-height: 100vh;            /* at least as tall as the screen */
+    display: flex;
+    align-items: center;
+    padding: 130px 0 90px;        /* extra top padding clears the navbar */
+}
+
+.hero-inner {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;  /* two columns, left one wider */
+    gap: 60px;
+    align-items: center;
+}
+
+/* The small "PORTFOLIO" label above my name. */
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 15px;
+    margin-bottom: 22px;
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    background: rgba(0, 229, 255, 0.05);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cyan);
+}
+
+/* The small glowing dot next to the label. */
+.eyebrow-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1;  transform: scale(1); }
+    50%      { opacity: 0.4; transform: scale(0.8); }
+}
+
+.hero-name {
+    font-size: clamp(2.6rem, 6.5vw, 4.6rem);  /* see note below */
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    margin-bottom: 14px;
+    /* The drop-shadow makes the gradient text look like it is glowing. */
+    filter: drop-shadow(0 0 26px rgba(0, 229, 255, 0.30));
+}
+
+/* NOTE ABOUT clamp():
+   clamp(MIN, PREFERRED, MAX) lets one line handle every screen size.
+   Here the name grows with the window, but never bigger than 4.6rem and
+   never smaller than 2.6rem. This is the modern way to do responsive text. */
+
+.hero-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.98rem, 2.1vw, 1.28rem);
+    color: var(--text-main);
+    min-height: 1.9em;            /* stops the page jumping while text types */
+    margin-bottom: 22px;
+}
+
+/* The blinking line that follows the typed text. */
+.cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.15em;
+    background: var(--cyan);
+    margin-left: 3px;
+    vertical-align: text-bottom;
+    box-shadow: 0 0 8px var(--cyan);
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.hero-desc {
+    font-size: 1.05rem;
+    max-width: 54ch;              /* keeps lines from becoming too long to read */
+    margin-bottom: 34px;
+    color: var(--text-body);
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;              /* buttons drop onto a new line if they don't fit */
+    gap: 14px;
+}
+
+/* Fades the bottom of the hero into the next section. */
+.hero-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(to bottom, transparent, var(--bg-dark));
+    pointer-events: none;
+}
+
+/* --- The decorative CSS padlock on the right --- */
+.hero-visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 380px;
+}
+
+.padlock {
+    position: relative;
+    width: 170px;
+    filter: drop-shadow(0 0 34px rgba(0, 229, 255, 0.45));
+}
+
+/* The U-shaped bar on top. The top half is hidden behind the body below. */
+.padlock-shackle {
+    width: 78px;
+    height: 78px;
+    margin: 0 auto -34px;        /* pulls it up so it looks tucked into the body */
+    border: 12px solid var(--cyan);
+    border-bottom: none;
+    border-radius: 44px 44px 0 0;
+    animation: float 4s ease-in-out infinite;   /* gentle up-and-down movement */
+}
+
+.padlock-body {
+    position: relative;
+    width: 170px;
+    height: 135px;
+    background: var(--gradient);
+    border-radius: 22px;
+    animation: float 4s ease-in-out infinite 0.5s;  /* 0.5s delay = out of sync,
+                                                       which looks more natural */
+}
+
+/* The dark keyhole in the middle of the body. */
+.padlock-keyhole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    background: #041020;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    /* Adds a small rectangle below the circle to complete the keyhole shape. */
+    box-shadow: 0 18px 0 -6px #041020;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+}
+
+/* Three small dots slowly orbiting the padlock. */
+.orbit-dot {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 14px var(--cyan);
+    animation: orbit 9s linear infinite;
+}
+
+.dot-1 { top: 22%;  left: 16%; }
+.dot-2 { bottom: 26%; right: 12%; animation-duration: 12s; animation-direction: reverse; }
+.dot-3 { top: 55%;  right: 6%;  width: 6px; height: 6px; animation-duration: 15s; }
+
+/* This only looks like a real orbit because the dots travel in a circle
+   (translate + rotate) while the whole shape is hidden behind the artwork. */
+@keyframes orbit {
+    0%   { transform: translate(0, 0) rotate(0deg) translateX(0); opacity: 0.3; }
+    50%  { opacity: 1; }
+    100% { transform: translate(0, 0) rotate(360deg) translateX(26px); opacity: 0.3; }
+}
+
+
+/* ==========================================================================
+   7. SHARED SECTION STYLES (used by About, Skills, Projects, ...)
+   ========================================================================== */
+
+.section {
+    position: relative;
+    padding: 100px 0;
+    /* A very slightly lighter navy separates this section from the previous. */
+    background: var(--bg-navy);
+    /* An almost invisible line at the top of the section. */
+    border-top: 1px solid rgba(0, 229, 255, 0.06);
+}
+
+/* Alternating sections get the darker background for a subtle stripe effect. */
+.section:nth-of-type(even) {
+    background: var(--bg-dark);
+}
+
+.section-title {
+    font-size: clamp(1.9rem, 4.2vw, 2.9rem);
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+}
+
+/* The optional sentence under a section title. */
+.section-sub {
+    max-width: 62ch;
+    color: var(--text-muted);
+    margin-bottom: 46px;
+}
+
+
+/* ==========================================================================
+   7a. ABOUT
+   ========================================================================== */
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+    align-items: start;
+}
+
+.about-text p {
+    margin-bottom: 18px;
+}
+
+.about-text strong {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.about-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+/* A small card. It has a subtle gradient at the top that glows on hover. */
+.mini-card {
+    position: relative;
+    padding: 22px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform var(--transition), border-color var(--transition);
+}
+
+.mini-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--gradient);
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.mini-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+}
+
+.mini-card:hover::before {
+    opacity: 1;
+}
+
+.mini-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--cyan-dim);
+    margin-bottom: 7px;
+}
+
+.mini-value {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+
+/* ==========================================================================
+   8. SKILLS
+   ==========================================================================
+   NOTE: these cards deliberately have NO progress bars or star ratings.
+   A bar would claim a level of ability I cannot honestly prove. Instead
+   each card uses a simple word label: Learning / Beginner / Foundations.
+   ========================================================================== */
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.skill-card {
+    padding: 28px 26px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform var(--transition),
+                border-color var(--transition),
+                box-shadow var(--transition),
+                background var(--transition);
+}
+
+/* Lifting and glowing on hover is the main effect on every card. */
+.skill-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-strong);
+    box-shadow: var(--glow);
+    background: var(--bg-card-hover);
+}
+
+.skill-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 13px;
+}
+
+.skill-card h3 {
+    font-size: 1.16rem;
+}
+
+/* --- The coloured level labels --- */
+.tag {
+    flex-shrink: 0;               /* stops the label being squashed */
+    padding: 4px 11px;
+    border-radius: 50px;
+    border: 1px solid;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;          /* keeps "In Progress" on one line */
+}
+
+/* Green = actively studying right now. */
+.tag-learning {
+    color: #00ffa8;
+    border-color: rgba(0, 255, 168, 0.35);
+    background: rgba(0, 255, 168, 0.09);
+}
+
+/* Cyan = knows the basics, still practising. */
+.tag-beginner {
+    color: var(--cyan);
+    border-color: var(--border-strong);
+    background: rgba(0, 229, 255, 0.09);
+}
+
+/* Blue = has covered the introductory material. */
+.tag-foundations {
+    color: #7aa8ff;
+    border-color: rgba(47, 123, 255, 0.35);
+    background: rgba(47, 123, 255, 0.10);
+}
+
+/* Amber = work in progress. Used on the project cards. */
+.tag-progress {
+    color: #ffc857;
+    border-color: rgba(255, 200, 87, 0.35);
+    background: rgba(255, 200, 87, 0.09);
+}
+
+.skill-card p {
+    font-size: 0.95rem;
+}
+
+/* The small italic-style line about what I am currently studying. */
+.skill-note {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(0, 229, 255, 0.14);
+    color: var(--cyan-dim);
+    font-size: 0.86rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+
+/* ==========================================================================
+   9. PROJECTS
+   ========================================================================== */
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 22px;
+}
+
+.project-card {
+    display: flex;
+    flex-direction: column;        /* lets the links sit at the bottom of the card */
+    padding: 30px 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition),
+                border-color var(--transition),
+                box-shadow var(--transition);
+}
+
+/* A thin glowing line that grows across the top on hover. */
+.project-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: var(--gradient);
+    transition: width 0.45s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-strong);
+    box-shadow: var(--glow);
+}
+
+.project-card:hover::after {
+    width: 100%;
+}
+
+.project-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+/* The little code-style icon box. */
+.project-icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 229, 255, 0.08);
+    border: 1px solid var(--border);
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.project-card h3 {
+    font-size: 1.24rem;
+    margin-bottom: 11px;
+}
+
+.project-card > p {
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+}
+
+/* The row of small topic tags, e.g. Python / Sockets / Port scanning. */
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin-bottom: 18px;
+}
+
+.tag-list li {
+    padding: 4px 11px;
+    border-radius: 50px;
+    background: rgba(47, 123, 255, 0.10);
+    border: 1px solid rgba(47, 123, 255, 0.22);
+    color: #9dc0ff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+}
+
+/* The legal note about only testing one's own systems. */
+.project-legal {
+    margin-top: auto;             /* pushes this block to the bottom of the card */
+    padding-top: 14px;
+    border-top: 1px dashed rgba(0, 229, 255, 0.14);
+    color: var(--text-muted);
+    font-size: 0.83rem;
+}
+
+.project-links {
+    margin-top: 16px;
+}
+
+
+/* ==========================================================================
+   10. CERTIFICATIONS
+   ==========================================================================
+   This section is EMPTY on purpose — no certificate is claimed.
+   It shows a dashed "empty state" card explaining that.
+   ========================================================================== */
+
+.certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 20px;
+}
+
+/* The empty-state card. A DASHED border shows it is a placeholder. */
+.cert-empty {
+    grid-column: 1 / -1;          /* spans the full width of the grid */
+    text-align: center;
+    padding: 54px 30px;
+    background: rgba(0, 229, 255, 0.02);
+    border: 2px dashed rgba(0, 229, 255, 0.22);
+    border-radius: var(--radius);
+}
+
+.cert-empty-icon {
+    font-size: 2.6rem;
+    display: block;
+    margin-bottom: 16px;
+    filter: grayscale(1) opacity(0.55);
+}
+
+.cert-empty h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.cert-empty p {
+    max-width: 52ch;
+    margin: 0 auto;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* --- Use this for each REAL certificate (an example is in index.html) --- */
+.cert-card {
+    padding: 26px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform var(--transition), border-color var(--transition);
+}
+
+.cert-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--border-strong);
+}
+
+.cert-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.cert-card h3 {
+    font-size: 1.08rem;
+}
+
+.cert-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.cert-link {
+    display: inline-block;
+    margin-top: 14px;
+    color: var(--cyan);
+    font-size: 0.88rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.cert-link:hover {
+    text-decoration: underline;
+}
+
+.cert-link[aria-disabled="true"] {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+
+/* ==========================================================================
+   11. CONTACT
+   ========================================================================== */
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.contact-card {
+    display: flex;
+    flex-direction: column;
+    padding: 28px 26px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform var(--transition),
+                border-color var(--transition),
+                box-shadow var(--transition),
+                background var(--transition);
+}
+
+.contact-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-strong);
+    box-shadow: var(--glow);
+    background: var(--bg-card-hover);
+}
+
+.contact-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 16px;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 229, 255, 0.08);
+    border: 1px solid var(--border);
+    color: var(--cyan);
+    font-size: 1.05rem;
+}
+
+.contact-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--cyan-dim);
+    margin-bottom: 7px;
+}
+
+.contact-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    word-break: break-all;       /* stops a long email overflowing on a phone */
+}
+
+
+/* ==========================================================================
+   12. FOOTER
+   ========================================================================== */
+
+.footer {
+    padding: 56px 0 34px;
+    background: var(--bg-dark);
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.footer-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
+
+.footer-legal {
+    max-width: 56ch;
+    margin: 0 auto 18px;
+    font-size: 0.87rem;
+    color: var(--text-muted);
+}
+
+.copyright {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* --- The "back to top" button --- */
+.to-top {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    background: var(--bg-card);
+    color: var(--cyan);
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: var(--glow);
+    opacity: 0;                   /* hidden by default */
+    visibility: hidden;           /* also hidden from keyboard and screen readers */
+    transform: translateY(14px);
+    transition: opacity var(--transition),
+                transform var(--transition),
+                visibility var(--transition),
+                box-shadow var(--transition);
+    z-index: 90;
+}
+
+/* script.js adds .show once the page has been scrolled. */
+.to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.to-top:hover {
+    box-shadow: var(--glow-strong);
+}
+
+
+/* ==========================================================================
+   13. THE REVEAL ANIMATION
+   ==========================================================================
+   Every element in the HTML with class="reveal" starts invisible, faded
+   and slightly lower down. script.js adds the class "visible" when it
+   scrolls into view, which plays the animation.
+
+   IMPORTANT: these rules are kept at the end of the file and are marked
+   !important so they always win.
+   ========================================================================== */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+
+/* ==========================================================================
+   14. RESPONSIVE DESIGN — phones and tablets
+   ==========================================================================
+   Mobile-first thinking: these rules UNDO the desktop layout when the
+   screen is small. The breakpoints used are common device widths:
+     992px -> tablets in landscape
+     820px -> tablets in portrait
+     680px -> large phones
+     480px -> small phones
+   ========================================================================== */
+
+/* ---------- Below 992px: the hero becomes one column ---------- */
+@media (max-width: 992px) {
+    .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+    }
+
+    /* Centres the small label when the text is centred. */
+    .hero-text .eyebrow {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    /* The padlock is decoration, so it is hidden on medium screens
+       to keep the content above the fold and tidy. */
+    .hero-visual {
+        display: none;
+    }
+
+    .hero {
+        min-height: auto;
+        padding: 120px 0 80px;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+
+/* ---------- Below 820px: the menu turns into a hamburger ---------- */
+@media (max-width: 820px) {
+
+    /* Hide the desktop links by default on small screens. */
+    .nav-links {
+        position: absolute;
+        top: 72px;                /* just below the navbar */
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        gap: 4px;
+        padding: 16px 24px 24px;
+        background: rgba(5, 11, 24, 0.98);
+        border-bottom: 1px solid var(--border);
+
+        /* Hidden by sliding up. max-height:0 collapses the box to nothing. */
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.35s ease, opacity 0.25s ease;
+    }
+
+    /* script.js adds .open to the menu when the button is pressed. */
+    .nav-links.open {
+        max-height: 340px;         /* big enough to show all the links */
+        opacity: 1;
+    }
+
+    .nav-link {
+        padding: 13px 15px;
+        font-size: 1rem;
+    }
+
+    /* Show the hamburger button. */
+    .nav-toggle {
+        display: flex;
+    }
+
+    /* Hide the "Get in touch" button in the navbar on phones,
+       because the contact section is easy to reach from the menu. */
+    .btn-nav {
+        display: none;
+    }
+}
+
+
+/* ---------- Below 680px: everything becomes one column ---------- */
+@media (max-width: 680px) {
+    .section {
+        padding: 74px 0;
+    }
+
+    /* The four small About cards go from 2 columns to 1. */
+    .about-cards {
+        grid-template-columns: 1fr;
+    }
+
+    /* Buttons stretch to the full width, which is easier to tap. */
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
+    .about-text p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+
+/* ---------- Below 480px: the smallest phones ---------- */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 18px;          /* less side padding on narrow screens */
+    }
+
+    .nav-inner {
+        height: 64px;
+    }
+
+    /* The navbar links must also move up, because the navbar is shorter. */
+    .nav-links {
+        top: 64px;
+    }
+
+    .brand-name {
+        font-size: 0.95rem;
+    }
+
+    /* Cards need a bit less padding so the text does not feel cramped. */
+    .skill-card,
+    .project-card,
+    .contact-card {
+        padding: 24px 20px;
+    }
+
+    .cert-empty {
+        padding: 40px 22px;
+    }
+
+    .to-top {
+        right: 16px;
+        bottom: 16px;
+        width: 42px;
+        height: 42px;
+    }
+}
+
+
+/* ==========================================================================
+   15. ACCESSIBILITY — respect people who reduce motion
+   ==========================================================================
+   Some people get motion sickness from animated backgrounds. This media
+   query switches off all the movement if the user has asked their
+   device to "reduce motion". It is an OS-level setting, which is why we
+   cannot detect it with JavaScript.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    /* Stops the infinite background movement. */
+    .bg-glow,
+    .orbit-dot,
+    .eyebrow-dot,
+    .cursor,
+    .padlock-shackle,
+    .padlock-body {
+        animation: none;
+    }
+
+    /* Page jumps straight to where the link points instead of gliding. */
+    html {
+        scroll-behavior: auto;
+    }
+
+    /* Everything is simply visible straight away. */
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
